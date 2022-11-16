@@ -296,8 +296,8 @@ window.addEventListener("load", function () {
         constructor(gameWidth, gameHeight, x, y) {
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
-            this.width = gameWidth/2;
-            this.height = gameHeight/2;
+            this.width = gameWidth;
+            this.height = gameHeight;
             this.x = x - this.width/2;
             this.y = y - this.height/2;
             this.image = document.getElementById("loadLeft");
@@ -312,8 +312,8 @@ window.addEventListener("load", function () {
         constructor(gameWidth, gameHeight, x, y) {
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
-            this.width = gameWidth/2;
-            this.height = gameHeight/2;
+            this.width = gameWidth;
+            this.height = gameHeight;
             this.x = x - this.width/2;
             this.y = y - this.height/2;
             this.image = document.getElementById("loadRight");
