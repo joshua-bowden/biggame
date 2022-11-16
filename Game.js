@@ -13,6 +13,9 @@ window.addEventListener("load", function () {
     // stores the team that is chosen, starts as empty team ""
     let team = "";
 
+    const buttonWidth = 100;
+    const buttonHeight = 50;
+
     // class creating an object for mouseevents
     class InputHandler {
         constructor() {
@@ -35,9 +38,16 @@ window.addEventListener("load", function () {
                 if (stage === 0) {
                     stage++;
                 }
+                if (stage === 2 && e.touches[0].clientX > canvas.width/2 - buttonWidth/2 && e.touches[0].clientX < canvas.width/2 + buttonWidth/2 && e.touches[0].clientY > canvas.height*4/5 + buttonHeight && e.touches[0].clientY < canvas.height*4/5 + buttonHeight * 2) {
+                    reset();
+                    stage = 1;
+                }
                 
             });
 
+        }
+        resetKeys() {
+            this.keys = [];
         }
     }
     // class creating object for the ball
@@ -100,6 +110,14 @@ window.addEventListener("load", function () {
         getX() {
             return this.x;
         }
+
+        reset() {
+            this.x = this.gameWidth / 2 - this.width / 2;
+            this.y = this.gameHeight * 6 / 7;
+            this.fall = false;
+            this.width = 45;
+            this.height = 75;
+        }
     }
     // class creating object for the goal
     class Fieldgoal {
@@ -147,7 +165,7 @@ window.addEventListener("load", function () {
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
             this.width = gameWidth / 3;
-            this.height = gameHeight / 3.5;
+            this.height = gameWidth / 3;
             this.x = x - this.width / 2;
             this.y = y - this.height / 2;
             this.image = document.getElementById("calImage");
@@ -161,8 +179,8 @@ window.addEventListener("load", function () {
         constructor(gameWidth, gameHeight, x, y) {
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
-            this.width = gameWidth / 4;
-            this.height = gameHeight / 4;
+            this.width = gameWidth / 3;
+            this.height = gameWidth / 3;
             this.x = x - this.width / 2;
             this.y = y - this.height / 2;
             this.image = document.getElementById("stanfordImage");
@@ -266,11 +284,6 @@ window.addEventListener("load", function () {
     }
     // object representing the welcome sign in stage 1
     const welcomeSign = new WelcomeSign(canvas.width, canvas.height, canvas.width / 2, canvas.height / 2);
-    const ghostballs = [];
-    // for loop holding the 5 ghost balls
-    for(let i = 0; i < 5; i++){
-        ghostballs.push(new Ball(canvas.width, canvas.height, true));
-    }
 
     // function that draws the field, fieldgoal, and ball (just cause this code is repeated multiple times)
     function drawBasicFBallSetup(){
@@ -375,6 +388,7 @@ window.addEventListener("load", function () {
                         ctx.fillStyle = "black";
                         ctx.textAlign = "center";
                         ctx.fillText("Missed:(", canvas.width/2, canvas.height * 4 / 5);
+                        ctx.fillRect(canvas.width/2 - buttonWidth/2, canvas.height * 4 / 5 + buttonHeight, buttonWidth, buttonHeight);    
                     }
                 }
             }
@@ -386,6 +400,12 @@ window.addEventListener("load", function () {
 
     }
 
+    function reset() {
+        ball.reset();
+        input.resetKeys();
+
+    }
+
 
     //calls animate, which runs the entire game
     animate();
@@ -393,17 +413,4 @@ window.addEventListener("load", function () {
 
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
