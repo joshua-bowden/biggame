@@ -46,6 +46,7 @@ window.addEventListener("load", function () {
                     stage++;
                 }
                 if (stage === 3 && e.touches[0].clientX > canvas.width / 2 - buttonWidth / 2 && e.touches[0].clientX < canvas.width / 2 + buttonWidth / 2 && e.touches[0].clientY > canvas.height * 4 / 5 && e.touches[0].clientY < canvas.height * 4 / 5 + buttonHeight) {
+                    stage = 2;
                     reset();
                 }
 
@@ -291,6 +292,38 @@ window.addEventListener("load", function () {
         }
     }
 
+    class LoadLeft {
+        constructor(gameWidth, gameHeight, x, y) {
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.width = gameWidth/2;
+            this.height = gameHeight/2;
+            this.x = x - this.width/2;
+            this.y = y - this.height/2;
+            this.image = document.getElementById("loadLeft");
+
+        }
+        draw(context) {
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
+         }
+    }
+
+    class LoadRight {
+        constructor(gameWidth, gameHeight, x, y) {
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.width = gameWidth/2;
+            this.height = gameHeight/2;
+            this.x = x - this.width/2;
+            this.y = y - this.height/2;
+            this.image = document.getElementById("loadRight");
+
+        }
+        draw(context) {
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
+         }
+    }
+
     class Button {
         constructor(gameWidth, gameHeight, x, y, width, height) {
             this.gameWidth = gameWidth;
@@ -349,8 +382,10 @@ window.addEventListener("load", function () {
         if (stage === 0) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             // draws the start graphic (axe picture)
-            const axe = new Axe(canvas.width, canvas.height, canvas.width / 2, canvas.height / 2);
-            axe.draw(ctx);
+            const leftlogo = new LoadLeft(canvas.width, canvas.height, canvas.width / 2, canvas.height / 2);
+            leftlogo.draw(ctx);
+            const rightlogo = new LoadRight(canvas.width, canvas.height, canvas.width / 2, canvas.height / 2);
+            rightlogo.draw(ctx);
             // draws the welcome sign and moves it up and down
             welcomeSign.draw(ctx);
             if (welcomeSign.getY() >= canvas.height * 3 / 4) {

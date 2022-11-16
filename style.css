@@ -18,7 +18,7 @@ body {
     max-height: 100%;
 }
 
-#footballImage, #fieldgoalImage, #fieldImage, #calImage, #stanfordImage, #submit, #axeImage, #ghostballImage, #retryButton, #qrCode, #bear, #tree{
+#footballImage, #fieldgoalImage, #loadLeft, #loadRight, #fieldImage, #calImage, #stanfordImage, #submit, #axeImage, #ghostballImage, #retryButton, #qrCode, #bear, #tree{
     display: none;
 
 }
