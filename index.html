@@ -9,25 +9,29 @@
     <link rel="stylesheet" href="style.css">   
 </head>
 
-<body>
-
+<body id="body">
     
     <canvas id="canvas1">
     </canvas>
+
+    <div id="inputContainer"></div>
+
     <img id="footballImage" src="assets/football.png">
     <img id="ghostballImage" src="assets/ghostball.png">
     <img id="fieldgoalImage" src="assets/fieldgoal.png">
     <img id="fieldImage" src="assets/field.png">
-    <img id="calImage" src="assets/cal.png">
-    <img id="stanfordImage" src="assets/stanford.png">
+    <img id="calImage" src="assets/calbear.png">
+    <img id="stanfordImage" src="assets/stanfordtree.png">
     <img id="axeImage" src="assets/axe.png">
     <img id="retryButton" src="assets/retry.png">
+    <img id="qrCode" src="assets/qr.png">
 
     <script>
-    //need these 3 lines so iframe from domain forwarding with masking properly handles touch
-    //events in ios safari
-    document.addEventListener('touchstart', {});
-    </script>
+        //need these 3 lines so iframe from domain forwarding with masking properly handles touch
+        //events in ios safari
+        document.addEventListener('touchstart', {});
+        </script>
+
     <script src="Game.js"></script>
 </body>
 
