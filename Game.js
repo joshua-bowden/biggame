@@ -230,9 +230,15 @@ window.addEventListener("load", function () {
             this.initialY = this.y;
             this.falling = false;
         }
-        draw(context, color) {
-            context.fillStyle = color;
-            context.fillRect(this.x, this.y, this.width, this.height);
+        draw(context, color){
+
+            if (color == "red"){
+                this.image = document.getElementById("tree");
+            }
+            else{
+                this.image = document.getElementById("bear");
+            }
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
         }
 
         jump() {
