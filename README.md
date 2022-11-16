@@ -1,4 +1,1 @@
-# biggame
-# welcome to the big game boys and girls
-# get ready to have your mind blown!
-# reimagining rivalry since 2022
+#12:23am 11/16 this code is the same code as is live
