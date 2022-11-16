@@ -45,6 +45,9 @@ window.addEventListener("load", function () {
                 if (stage === 2 && win === true){
                     stage++;
                 }
+                if (stage === 3 && e.touches[0].clientX > canvas.width / 2 - buttonWidth / 2 && e.touches[0].clientX < canvas.width / 2 + buttonWidth / 2 && e.touches[0].clientY > canvas.height * 4 / 5 && e.touches[0].clientY < canvas.height * 4 / 5 + buttonHeight) {
+                    reset();
+                }
 
             });
 
@@ -296,7 +299,15 @@ window.addEventListener("load", function () {
             this.height = height;
             this.x = x - this.width / 2;
             this.y = y;
-            this.image = document.getElementById("retryButton");
+            if(stage == 2){
+                //retry when on field goal page
+                this.image = document.getElementById("retryButton");    
+            }
+            else{
+                //funny gradescope submit when on username page
+                this.image = document.getElementById("submit");
+
+            }
         }
         draw(context) {
             context.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -406,7 +417,9 @@ window.addEventListener("load", function () {
                             ctx.fillStyle = "navy";
                         }
                         ctx.textAlign = "center";
-                        ctx.fillText("You scored for " + team.toUpperCase(), canvas.width / 2, canvas.height * 4 / 5);
+                        ctx.fillText("You scored +3 for " + team.toUpperCase(), canvas.width / 2, canvas.height * 4 / 5);
+                        const retryButton = new Button(canvas.width, canvas.height, canvas.width / 2, canvas.height * 4 / 5, buttonWidth, buttonHeight);
+                        retryButton.draw(ctx);
 
                         // makes fans jump up and down
                         for (let i = 0; i < fans.length; i++) {
@@ -450,7 +463,7 @@ window.addEventListener("load", function () {
             }
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "white";
-            ctx.fillText("YOU SCORED FOR " + team.toUpperCase() + "!", canvas.width / 2, canvas.height / 5);
+            ctx.fillText("YOU SCORED FOR " + team.toUpperCase() + "!", canvas.width / 2, canvas.height / 8);
             
             let div = document.getElementById("inputContainer");
             let input = document.createElement("input");
@@ -460,16 +473,23 @@ window.addEventListener("load", function () {
             input.placeholder = "Enter a username";
             div.appendChild(input);
 
-            ctx.fillText("Screenshot and Share!", canvas.width / 2, canvas.height / 2);
+            ctx.fillText("Screenshot and Share!", canvas.width / 2, canvas.height * 1.2 / 4);
 
-            const qr = new QR(canvas.width, canvas.height, canvas.width / 2, canvas.height * 3 / 4);
+            const qr = new QR(canvas.width/2, canvas.height/2, canvas.width / 2, canvas.height * 2.5 / 4);
             qr.draw(ctx);
+            //make submit button which SHOULD capture text and reset game. 
+            //HIGH PRIO is reset game, can you fix? meddled with line 48; currently doesnt work
+            const submitButton = new Button(canvas.width, canvas.height, canvas.width * 1.2/ 2, canvas.height /6, buttonWidth, buttonHeight/2);
+            submitButton.draw(ctx);
+            
 
         }        
 
     }
 
     function reset() {
+        //set to 2 so we can reset from end screen as well
+        stage = 2;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ball.reset();
         input.resetKeys();

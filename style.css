@@ -18,15 +18,15 @@ body {
     max-height: 100%;
 }
 
-#footballImage, #fieldgoalImage, #fieldImage, #calImage, #stanfordImage, #axeImage, #ghostballImage, #retryButton, #qrCode{
+#footballImage, #fieldgoalImage, #fieldImage, #calImage, #stanfordImage, #submit, #axeImage, #ghostballImage, #retryButton, #qrCode, #bear, #tree{
     display: none;
 
 }
 
 #inputContainer {
     position: absolute;
-    top: 25%;
-    left: 50%;
+    top: 20%;
+    left: 45%;
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
