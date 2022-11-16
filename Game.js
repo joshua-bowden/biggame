@@ -514,7 +514,7 @@ window.addEventListener("load", function () {
             qr.draw(ctx);
             //make submit button which SHOULD capture text and reset game. 
             //HIGH PRIO is reset game, can you fix? meddled with line 48; currently doesnt work
-            const submitButton = new Button(canvas.width, canvas.height, canvas.width * 1.2/ 2, canvas.height /6, buttonWidth, buttonHeight/2);
+            const submitButton = new Button(canvas.width, canvas.height, canvas.width * 1.2/ 2, canvas.height /7, buttonWidth, buttonHeight/2);
             submitButton.draw(ctx);
             
 
