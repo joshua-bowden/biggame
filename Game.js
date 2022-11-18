@@ -316,7 +316,7 @@ window.addEventListener("load", function () {
         }
         draw(context) {
             context.textAlign = "center";
-            context.font = "30px Arial";
+            context.font = "60px Arial";
             context.fillStyle = "white";
             context.fillText("Welcome to the BIG GAME!", this.x, this.y);
             context.fillText("Touch the screen to begin!", this.x, this.y + 50);
@@ -485,7 +485,7 @@ window.addEventListener("load", function () {
             ctx.font = "60px Trebuchet MS";
 
             ctx.fillStyle = "black";
-            ctx.fillText("Choose your team:", canvas.width / 2, 30);
+            ctx.fillText("Choose your team:", canvas.width / 2, 50);
             //draw scores at bar level minus height * .2
             ctx.fillText(Math.trunc(localStorage.stanfordScore) + " pts", canvas.width * 1/ 4, canvas.height / 7);
             ctx.fillText(Math.trunc(localStorage.berkeleyScore) + " pts", canvas.width * 3 / 4, canvas.height / 7);
