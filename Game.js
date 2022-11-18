@@ -482,7 +482,7 @@ window.addEventListener("load", function () {
             stanfordLogo.draw(ctx);
             calLogo.draw(ctx);
 
-            ctx.font = "30px Trebuchet MS";
+            ctx.font = "60px Trebuchet MS";
 
             ctx.fillStyle = "black";
             ctx.fillText("Choose your team:", canvas.width / 2, 30);
@@ -546,7 +546,7 @@ window.addEventListener("load", function () {
                             localStorage.scoreDiff = Number(localStorage.scoreDiff) - 3;
                             hasReset = false;
                         }
-                        ctx.font = "30px Trebuchet MS";
+                        ctx.font = "60px Trebuchet MS";
                         ctx.textAlign = "center";
                         ctx.fillStyle = "white";
                         ctx.fillText("You've scored:", canvas.width * 4 / 5, canvas.height * 3 / 5);
