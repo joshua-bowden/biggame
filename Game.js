@@ -2,6 +2,50 @@
 // implementation of The Big Game
 // runs code once all images have been loaded, ensures that game doesnt start without graphics being available
 window.addEventListener("load", function () {
+
+
+    //730 plays from analytics * 3
+    const scoreDefault = 2190
+
+    const time = Date.now()
+    //quarter minutes since "start of day"
+    const timeAccumulated = Math.trunc((Number(time) - Number(1668800509608))/15000)
+    const scoreAccumulatedByTime = timeAccumulated * 4.25;
+    //if has visited, set score to base + NEW time adjusted additive + user scores. increment visit
+    if(localStorage.stanfordScore){
+        localStorage.stanfordScore = scoreDefault + scoreAccumulatedByTime + localStorage.userS;
+        //random gap only 10 when refreshing so doenst look suspicious
+        //also "its getting closer!!"
+        const sameGap = 10
+
+        localStorage.berkeleyScore = Number(localStorage.stanfordScore) + (Math.floor(Math.random() * (sameGap + sameGap) ) - sameGap) + localStorage.userB;    
+        //quarter minutes in integer since "start of day" or whenever we want (for math).
+        //*so every 15sec score will update "serverside"
+        localStorage.quarterMinutesSince = timeAccumulated;
+        localStorage.currentTime = time;
+        //can make it so after 50 visits, 150 pts is more than the 100 random gap below
+        // >> so we just take away their points
+        //visit not updating for some reason
+        localStorage.visit = Number(localStorage.visit) + 1;
+        localStorage.scoreDiff = (Number(localStorage.stanfordScore) - Number(localStorage.berkeleyScore))
+    }
+    //if hasn't visited site yet, set score to base + time adjusted additive
+    else{
+        localStorage.stanfordScore = scoreDefault + scoreAccumulatedByTime;
+        //makes berkeley score within stanford by gap; random -gap to +gap
+        const gap = 20
+        localStorage.berkeleyScore = Number(localStorage.stanfordScore) + Math.floor(Math.random() * (gap + gap) ) - gap;       
+        localStorage.quarterMinutesSince = timeAccumulated;
+        localStorage.currentTime = time;
+        localStorage.visit = 1
+        localStorage.scoreDiff = (Number(localStorage.stanfordScore) - Number(localStorage.berkeleyScore))
+        localStorage.userS = 0;
+        localStorage.userB = 0;
+    }
+    
+    // do this inside screen 1. then add to 3 to local cookie after make.
+    // this cookie sticks with their device
+
     // initializes the canvas
     const canvas = document.getElementById("canvas1");
     canvas.width = window.innerWidth;
@@ -13,6 +57,7 @@ window.addEventListener("load", function () {
     // stores the team that is chosen, starts as empty team ""
     let team = "";
     let win = false;
+    let hasReset = true;
 
     const buttonWidth = 100;
     const buttonHeight = 100;
@@ -45,10 +90,11 @@ window.addEventListener("load", function () {
                 if (stage === 2 && win === true){
                     stage++;
                 }
-                if (stage === 3 && e.touches[0].clientX > canvas.width / 2 - buttonWidth / 2 && e.touches[0].clientX < canvas.width / 2 + buttonWidth / 2 && e.touches[0].clientY > canvas.height * 4 / 5 && e.touches[0].clientY < canvas.height * 4 / 5 + buttonHeight) {
+                /*if (stage === 3 && e.touches[0].clientX > canvas.width / 2 - buttonWidth / 2 && e.touches[0].clientX < canvas.width / 2 + buttonWidth / 2 && e.touches[0].clientY > canvas.height * 4 / 5 && e.touches[0].clientY < canvas.height * 4 / 5 + buttonHeight) {
                     stage = 2;
                     reset();
                 }
+                */
 
             });
 
@@ -64,7 +110,7 @@ window.addEventListener("load", function () {
             this.gameHeight = gameHeight;
             this.width = 45;
             this.height = 75;
-            this.dx = 5;
+            this.dx = 10;
             this.fall = false;
             this.x = gameWidth / 2 - this.width / 2;
             this.y = gameHeight * 6 / 7;
@@ -98,11 +144,11 @@ window.addEventListener("load", function () {
             }
 
             if (!this.fall) {
-                this.y -= 5;
+                this.y -= 15;
             }
 
             if (this.fall) {
-                this.y += 3;
+                this.y += 6;
                 if (this.y >= this.gameHeight / 2) {
                     this.width = 0;
                     this.height = 0;
@@ -131,6 +177,7 @@ window.addEventListener("load", function () {
             this.width = 45;
             this.height = 75;
             this.kicked = false;
+            hasReset = true;
         }
     }
     // class creating object for the goal
@@ -138,8 +185,8 @@ window.addEventListener("load", function () {
         constructor(gameWidth, gameHeight) {
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
-            this.width = 108;
-            this.height = 200;
+            this.width = 2*108;
+            this.height = 1.5*200;
             this.x = gameWidth / 2 - this.width / 2;
             this.y = gameHeight * 2 / 5;
             this.image = document.getElementById("fieldgoalImage");
@@ -368,8 +415,11 @@ window.addEventListener("load", function () {
     const fans = [];
     //for loop that draws 5 rows of 10 fans in the top half of the screen and adds them to the fans array
     for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 10; j++) {
-            fans.push(new Fan(canvas.width, canvas.height, canvas.width * (j + 1) / 11, canvas.height * (i + 1) / 11));
+        for (let j = 0; j < 5; j++) {
+            if(!(i == 4 && j == 2)){
+                fans.push(new Fan(canvas.width*2, canvas.height*2, canvas.width * (j + 1) / 6, canvas.height * (i + 1) / 11));
+
+            }
         }
     }
     // object representing the welcome sign in stage 1
@@ -406,18 +456,44 @@ window.addEventListener("load", function () {
         // second stage of game, choose team
         if (stage === 1) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            ctx.fillRect(0,0,canvas.width,canvas.height);
             // draws the two sides
-            ctx.fillStyle = "red";
-            ctx.fillRect(0, 0, canvas.width / 2, canvas.height);
-            ctx.fillStyle = "navy";
-            ctx.fillRect(canvas.width / 2, 0, canvas.width / 2, canvas.height);
+            //start from canvas.height "bottom of page" and draw in negative direction "up"
+            if(localStorage.scoreDiff > 0){
+                ctx.fillStyle = "red";
+                ctx.fillRect(0, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3 - (localStorage.scoreDiff * 5));
+                ctx.fillStyle = "navy";
+                ctx.fillRect(canvas.width / 2, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3);
+
+            }
+            else{
+                ctx.fillStyle = "red";
+                ctx.fillRect(0, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3);
+                ctx.fillStyle = "navy";
+                ctx.fillRect(canvas.width / 2, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3  + (localStorage.scoreDiff * 5));
+                
+            }
+
             // creates the two logo objects
             const stanfordLogo = new StanfordLogo(canvas.width, canvas.height, canvas.width / 4, canvas.height / 2);
             const calLogo = new CalLogo(canvas.width, canvas.height, canvas.width * 3 / 4, canvas.height / 2);
             stanfordLogo.draw(ctx);
             calLogo.draw(ctx);
+
+            ctx.font = "30px Trebuchet MS";
+
+            ctx.fillStyle = "black";
+            ctx.fillText("Choose your team:", canvas.width / 2, 30);
+            //draw scores at bar level minus height * .2
+            ctx.fillText(Math.trunc(localStorage.stanfordScore) + " pts", canvas.width * 1/ 4, canvas.height / 7);
+            ctx.fillText(Math.trunc(localStorage.berkeleyScore) + " pts", canvas.width * 3 / 4, canvas.height / 7);
+            
+            ctx.font = "60px Trebuchet MS";
+
+
             ctx.fillStyle = "white";
-            ctx.fillText("Choose your team:", canvas.width / 2, canvas.height / 4);
+
         }
 
         // third stage of game, actual gameplay
@@ -449,16 +525,41 @@ window.addEventListener("load", function () {
                 if (ball.kick()) {
                     // if kick is good, prints message on screen that player has scored for their chosen team
                     if (ball.getX() > fieldgoal.getX() + fieldgoal.getWidth() * 0.1 && ball.getX() < fieldgoal.getX() + fieldgoal.getWidth() - fieldgoal.getWidth() * 0.1) {
+                        ctx.font = "60px Trebuchet MS";
+                        //win = true;
+
+                        const qr = new QR(canvas.width/2, canvas.height/2, canvas.width / 5, canvas.height * 3/ 5);
+                        qr.draw(ctx);
+
+                        if (team === "stanford" && hasReset) {
+                            let chosenFillStyle = "red";
+                            localStorage.stanfordScore = Number(localStorage.stanfordScore) + 3;
+                            localStorage.userS = Number(localStorage.userS) + 3;
+                            localStorage.scoreDiff = Number(localStorage.scoreDiff) + 3;
+                            hasReset = false;
+                        }
+                        if (team === "cal" && hasReset) {
+                            let chosenFillStyle = "navy";
+                            localStorage.berkeleyScore = Number(localStorage.berkeleyScore) + 3;
+                            localStorage.userB = Number(localStorage.userB) + 3;
+                            localStorage.scoreDiff = Number(localStorage.scoreDiff) - 3;
+                            hasReset = false;
+                        }
                         ctx.font = "30px Trebuchet MS";
-                        win = true;
-                        if (team === "stanford") {
-                            ctx.fillStyle = "red";
-                        }
-                        if (team === "cal") {
-                            ctx.fillStyle = "navy";
-                        }
+                        ctx.textAlign = "center";
+                        ctx.fillStyle = "white";
+                        ctx.fillText("You've scored:", canvas.width * 4 / 5, canvas.height * 3 / 5);
+                        ctx.fillStyle = "red";
+                        ctx.fillText(localStorage.userS + " for Stanford", canvas.width * 4 / 5, canvas.height * 3.2 / 5);
+                        ctx.fillStyle = "navy";
+                        ctx.fillText(localStorage.userB + " for Berkeley", canvas.width * 4 / 5, canvas.height * 3.4 / 5);
+                        
+                        ctx.fillStyle = chosenFillStyle;
+                        ctx.font = "60px Trebuchet MS";
                         ctx.textAlign = "center";
                         ctx.fillText("You scored +3 for " + team.toUpperCase(), canvas.width / 2, canvas.height * 4 / 5);
+                        ctx.fillText("See if your friends can make it ;) ", canvas.width / 2, canvas.height * 9 / 10);
+
                         const retryButton = new Button(canvas.width, canvas.height, canvas.width / 2, canvas.height * 4 / 5, buttonWidth, buttonHeight);
                         retryButton.draw(ctx);
 
@@ -481,7 +582,7 @@ window.addEventListener("load", function () {
                     }
                     // prints missed message to screen if kick is not good
                     else if (ball.isKicked())  {
-                        ctx.font = "30px Arial";
+                        ctx.font = "60px Arial";
                         ctx.fillStyle = "black";
                         ctx.textAlign = "center";
                         ctx.fillText("Missed:(", canvas.width / 2, canvas.height * 3/4);
@@ -543,17 +644,5 @@ window.addEventListener("load", function () {
 
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
