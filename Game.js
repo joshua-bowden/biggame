@@ -13,12 +13,12 @@ window.addEventListener("load", function () {
     const scoreAccumulatedByTime = timeAccumulated * 4.25;
     //if has visited, set score to base + NEW time adjusted additive + user scores. increment visit
     if(localStorage.stanfordScore){
-        localStorage.stanfordScore = scoreDefault + scoreAccumulatedByTime + localStorage.userS;
+        localStorage.stanfordScore = scoreDefault + scoreAccumulatedByTime + Number(localStorage.userS);
         //random gap only 10 when refreshing so doenst look suspicious
         //also "its getting closer!!"
         const sameGap = 10
 
-        localStorage.berkeleyScore = Number(localStorage.stanfordScore) + (Math.floor(Math.random() * (sameGap + sameGap) ) - sameGap) + localStorage.userB;    
+        localStorage.berkeleyScore = Number(localStorage.stanfordScore) + (Math.floor(Math.random() * (sameGap + sameGap) ) - sameGap) + Number(localStorage.userB);    
         //quarter minutes in integer since "start of day" or whenever we want (for math).
         //*so every 15sec score will update "serverside"
         localStorage.quarterMinutesSince = timeAccumulated;
@@ -46,6 +46,7 @@ window.addEventListener("load", function () {
     // do this inside screen 1. then add to 3 to local cookie after make.
     // this cookie sticks with their device
 
+    let chosenFillStyle = "";
     // initializes the canvas
     const canvas = document.getElementById("canvas1");
     canvas.width = window.innerWidth;
@@ -462,16 +463,16 @@ window.addEventListener("load", function () {
             //start from canvas.height "bottom of page" and draw in negative direction "up"
             if(localStorage.scoreDiff > 0){
                 ctx.fillStyle = "red";
-                ctx.fillRect(0, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3 - (localStorage.scoreDiff * 5));
+                ctx.fillRect(0, canvas.height, canvas.width / 2, canvas.height * -1 * 1/2 - (localStorage.scoreDiff * 5));
                 ctx.fillStyle = "navy";
-                ctx.fillRect(canvas.width / 2, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3);
+                ctx.fillRect(canvas.width / 2, canvas.height, canvas.width / 2, canvas.height * -1 * 1/2);
 
             }
             else{
                 ctx.fillStyle = "red";
-                ctx.fillRect(0, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3);
+                ctx.fillRect(0, canvas.height, canvas.width / 2, canvas.height * -1 * 1/2);
                 ctx.fillStyle = "navy";
-                ctx.fillRect(canvas.width / 2, canvas.height, canvas.width / 2, canvas.height * -1 * 2/3  + (localStorage.scoreDiff * 5));
+                ctx.fillRect(canvas.width / 2, canvas.height, canvas.width / 2, canvas.height * -1 * 1/2  + (localStorage.scoreDiff * 5));
                 
             }
 
@@ -532,14 +533,14 @@ window.addEventListener("load", function () {
                         qr.draw(ctx);
 
                         if (team === "stanford" && hasReset) {
-                            let chosenFillStyle = "red";
+                            chosenFillStyle = "red";
                             localStorage.stanfordScore = Number(localStorage.stanfordScore) + 3;
                             localStorage.userS = Number(localStorage.userS) + 3;
                             localStorage.scoreDiff = Number(localStorage.scoreDiff) + 3;
                             hasReset = false;
                         }
                         if (team === "cal" && hasReset) {
-                            let chosenFillStyle = "navy";
+                            chosenFillStyle = "navy";
                             localStorage.berkeleyScore = Number(localStorage.berkeleyScore) + 3;
                             localStorage.userB = Number(localStorage.userB) + 3;
                             localStorage.scoreDiff = Number(localStorage.scoreDiff) - 3;
