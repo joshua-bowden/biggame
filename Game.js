@@ -9,7 +9,7 @@ window.addEventListener("load", function () {
 
     const time = Date.now()
     //quarter minutes since "start of day"
-    const timeAccumulated = Math.trunc((Number(time) - Number(1668806036847))/15000)
+    const timeAccumulated = Math.trunc((Number(time) - Number(1671649432614))/15000)
     const scoreAccumulatedByTime = timeAccumulated * 4.25;
     //if has visited, set score to base + NEW time adjusted additive + user scores. increment visit
     if(localStorage.stanfordScore){
